@@ -1,0 +1,31 @@
+{
+  "version": "0.142.0",
+  "tagName": "rust-v0.142.0",
+  "publishedAt": "2026-06-22T22:19:53Z",
+  "rev": "3a76f3ac68c8949d1cac6ea769b6ec7b8953a415",
+  "source": {
+    "hash": "sha256-F8wlv0vSuljNFDgIzoeuVxvD0dk90z2FBtpBTMih7AA="
+  },
+  "rustyV8": {
+    "version": "149.2.0",
+    "platforms": {
+      "x86_64-linux": {
+        "url": "https://github.com/denoland/rusty_v8/releases/download/v149.2.0/librusty_v8_release_x86_64-unknown-linux-gnu.a.gz",
+        "hash": "sha256-iu2YY323533Iv7i7R1nsW95HLQv3lD9Y4OYqNQlFxVk="
+      },
+      "aarch64-linux": {
+        "url": "https://github.com/denoland/rusty_v8/releases/download/v149.2.0/librusty_v8_release_aarch64-unknown-linux-gnu.a.gz",
+        "hash": "sha256-+XdRJ8pk3MSjZi0BpSGizvuluY+DOUOog9hHc7Kv88U="
+      },
+      "x86_64-darwin": {
+        "url": "https://github.com/denoland/rusty_v8/releases/download/v149.2.0/librusty_v8_release_x86_64-apple-darwin.a.gz",
+        "hash": "sha256-eUlAo4o/ZrfvUqXwA8awlPdDrQQKZK+z082frUlADwc="
+      },
+      "aarch64-darwin": {
+        "url": "https://github.com/denoland/rusty_v8/releases/download/v149.2.0/librusty_v8_release_aarch64-apple-darwin.a.gz",
+        "hash": "sha256-+rsuyNO6Wm3qY9uaNalg3FypheujLzQrm6Sqocc0sv4="
+      }
+    }
+  },
+  "cargoHash": "sha256-fvEFNE12J6zaLZrN6oQB8X+jXoKPSCWrL17Sl28+7/c="
+}
