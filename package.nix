@@ -1,5 +1,5 @@
 {
-  darwin,
+  apple-sdk,
   fetchFromGitHub,
   fetchurl,
   lib,
@@ -54,10 +54,7 @@ rustPlatform.buildRustPackage {
     ]
     ++ lib.optionals stdenv.hostPlatform.isLinux [ libcap ]
     ++ lib.optionals stdenv.hostPlatform.isDarwin [
-      darwin.apple_sdk.frameworks.AppKit
-      darwin.apple_sdk.frameworks.CoreFoundation
-      darwin.apple_sdk.frameworks.Security
-      darwin.apple_sdk.frameworks.SystemConfiguration
+      apple-sdk
     ];
 
   # Upstream tests include integration cases that expect network, writable home
