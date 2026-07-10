@@ -16,6 +16,12 @@ let
   cargoBuildFlags = [
     "-p"
     "codex-cli"
+    "-p"
+    "codex-code-mode-host"
+    "--bin"
+    "codex"
+    "--bin"
+    "codex-code-mode-host"
   ];
   rustyV8 =
     release.rustyV8.platforms.${system}
@@ -38,6 +44,7 @@ rustPlatform.buildRustPackage {
 
   cargoHash = release.cargoHash;
   inherit cargoBuildFlags;
+  cargoInstallFlags = cargoBuildFlags;
   cargoTestFlags = cargoBuildFlags;
 
   env = {
@@ -58,7 +65,7 @@ rustPlatform.buildRustPackage {
     ];
 
   # Upstream tests include integration cases that expect network, writable home
-  # state, and app-server setup. The flake check covers the installed binary.
+  # state, and app-server setup. The flake checks cover the installed binaries.
   doCheck = false;
 
   passthru = {
