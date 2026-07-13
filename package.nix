@@ -1,6 +1,7 @@
 {
   apple-sdk,
   fetchFromGitHub,
+  fetchpatch,
   fetchurl,
   lib,
   libcap,
@@ -41,6 +42,17 @@ rustPlatform.buildRustPackage {
   postUnpack = ''
     sourceRoot="$sourceRoot/codex-rs"
   '';
+
+  # PR #31058: retry structured model-capacity failures without ending the current turn.
+  # Pin both ends of the compare so this remains reproducible if the PR changes.
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/openai/codex/compare/1f0566d3f59298d1bb88820a0d35294f1eeb07ea...49b5b721c12dc1ae674abe47a347baf7f28e82d1.diff";
+      hash = "sha256-q+Zdlf3fD+tXY/HwfIwOvZAWQhGjmS8a85RzzOTK9kc=";
+    })
+  ];
+  # The upstream diff is rooted at codex-rs/, while sourceRoot is already there.
+  patchFlags = [ "-p2" ];
 
   cargoHash = release.cargoHash;
   inherit cargoBuildFlags;
