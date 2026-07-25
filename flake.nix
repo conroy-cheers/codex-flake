@@ -2,7 +2,7 @@
   description = "OpenAI Codex CLI source package";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/a799d3e3886da994fa307f817a6bc705ae538eeb";
+    nixpkgs.url = "github:NixOS/nixpkgs/18b9261cb3294b6d2a06d03f96872827b8fe2698";
   };
 
   outputs =
