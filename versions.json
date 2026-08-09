@@ -1,31 +1,56 @@
 {
-  "version": "0.146.1",
-  "tagName": "rust-v0.146.1",
-  "publishedAt": "2026-08-05T15:55:06Z",
-  "rev": "79b4f03d35962b005b007a015113b38930711665",
+  "version": "0.147.0",
+  "tagName": "rust-v0.147.0",
+  "publishedAt": "2026-08-07T01:41:49Z",
+  "rev": "be6e8eac029b183056b7e4402879f15d2c85f61b",
   "source": {
-    "hash": "sha256-aXK/hUz61STkD8xcVqvBzP1RYDu+kw7v1ufVZHyzN84="
+    "hash": "sha256-NKeOxp9vLcx7tpghqhpS3ocPqUDP2PircNwkJNpHBPo="
   },
   "rustyV8": {
-    "version": "149.2.0",
+    "version": "150.4.0",
+    "profile": "ptrcomp_sandbox_release",
     "platforms": {
       "x86_64-linux": {
-        "url": "https://github.com/denoland/rusty_v8/releases/download/v149.2.0/librusty_v8_release_x86_64-unknown-linux-gnu.a.gz",
-        "hash": "sha256-iu2YY323533Iv7i7R1nsW95HLQv3lD9Y4OYqNQlFxVk="
+        "archive": {
+          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/librusty_v8_ptrcomp_sandbox_release_x86_64-unknown-linux-gnu.a.gz",
+          "hash": "sha256-o1x10fJuapg4haRbM0kKTr5U8FBQVosyuJz7QhswtYM="
+        },
+        "binding": {
+          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/src_binding_ptrcomp_sandbox_release_x86_64-unknown-linux-gnu.rs",
+          "hash": "sha256-dyeCauR5vbZF6Acjn7EtH44uI956bPFvXuWSaQ0dhQY="
+        }
       },
       "aarch64-linux": {
-        "url": "https://github.com/denoland/rusty_v8/releases/download/v149.2.0/librusty_v8_release_aarch64-unknown-linux-gnu.a.gz",
-        "hash": "sha256-+XdRJ8pk3MSjZi0BpSGizvuluY+DOUOog9hHc7Kv88U="
+        "archive": {
+          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/librusty_v8_ptrcomp_sandbox_release_aarch64-unknown-linux-gnu.a.gz",
+          "hash": "sha256-0VF+7UBUaFNwKbAF1f6ZfsdNXI01H5FrOm3yC30oEbo="
+        },
+        "binding": {
+          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/src_binding_ptrcomp_sandbox_release_aarch64-unknown-linux-gnu.rs",
+          "hash": "sha256-dyeCauR5vbZF6Acjn7EtH44uI956bPFvXuWSaQ0dhQY="
+        }
       },
       "x86_64-darwin": {
-        "url": "https://github.com/denoland/rusty_v8/releases/download/v149.2.0/librusty_v8_release_x86_64-apple-darwin.a.gz",
-        "hash": "sha256-eUlAo4o/ZrfvUqXwA8awlPdDrQQKZK+z082frUlADwc="
+        "archive": {
+          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/librusty_v8_ptrcomp_sandbox_release_x86_64-apple-darwin.a.gz",
+          "hash": "sha256-4Nm7ZOizoDTCkwyDly8/NXYCERSDQvoEB7OCUO8zCFY="
+        },
+        "binding": {
+          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/src_binding_ptrcomp_sandbox_release_x86_64-apple-darwin.rs",
+          "hash": "sha256-ylrfDPicmnCtRgrnNkiy/om3SqETs8t/dXtqArdYOU8="
+        }
       },
       "aarch64-darwin": {
-        "url": "https://github.com/denoland/rusty_v8/releases/download/v149.2.0/librusty_v8_release_aarch64-apple-darwin.a.gz",
-        "hash": "sha256-+rsuyNO6Wm3qY9uaNalg3FypheujLzQrm6Sqocc0sv4="
+        "archive": {
+          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/librusty_v8_ptrcomp_sandbox_release_aarch64-apple-darwin.a.gz",
+          "hash": "sha256-AK27SHmISMd1UEQcaGc6XoUpuOG3PqvN7iMss5tA9KE="
+        },
+        "binding": {
+          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/src_binding_ptrcomp_sandbox_release_aarch64-apple-darwin.rs",
+          "hash": "sha256-ylrfDPicmnCtRgrnNkiy/om3SqETs8t/dXtqArdYOU8="
+        }
       }
     }
   },
-  "cargoHash": "sha256-N9jbH/cgAyu2QxneSnpkdaF0MgV3ZtDmN9q6rr9u+hE="
+  "cargoHash": "sha256-MJuM2QLxvL+r/Gw8QXLjtsLS25QGVCqcqU5GJssSoQ4="
 }

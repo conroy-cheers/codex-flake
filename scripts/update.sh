@@ -92,22 +92,89 @@ if [ -z "$v8_version" ]; then
   exit 1
 fi
 
+v8_package_script="$source_path/scripts/codex_package/v8.py"
+if [ ! -f "$v8_package_script" ]; then
+  echo "could not find Codex V8 package metadata: $v8_package_script" >&2
+  exit 1
+fi
+
+v8_profile="$(
+  awk -F'"' '
+    $1 == "V8_ARTIFACT_PROFILE = " {
+      print $2
+      exit
+    }
+  ' "$v8_package_script"
+)"
+if [ -z "$v8_profile" ]; then
+  if awk '/librusty_v8_release_/ { found = 1 } END { exit !found }' "$v8_package_script"; then
+    v8_profile="release"
+  else
+    echo "could not determine Codex rusty_v8 artifact profile" >&2
+    exit 1
+  fi
+fi
+
+case "$v8_profile" in
+  "" | *[!a-z0-9_]*)
+    echo "invalid Codex rusty_v8 artifact profile: $v8_profile" >&2
+    exit 1
+    ;;
+esac
+
 printf '{}\n' > "$rusty_v8_json"
 
 add_rusty_v8_platform() {
   local system="$1"
   local triple="$2"
-  local url hash next_json
+  local release_url archive_name binding_name checksums_name checksums_file
+  local archive_url archive_sha archive_hash binding_url binding_sha binding_hash
+  local next_json
 
-  url="https://github.com/denoland/rusty_v8/releases/download/v$v8_version/librusty_v8_release_$triple.a.gz"
-  hash="$(nix store prefetch-file --json "$url" | jq -r '.hash')"
+  release_url="https://github.com/openai/codex/releases/download/rusty-v8-v$v8_version"
+  archive_name="librusty_v8_${v8_profile}_${triple}.a.gz"
+  binding_name="src_binding_${v8_profile}_${triple}.rs"
+  checksums_name="rusty_v8_${v8_profile}_${triple}.sha256"
+  checksums_file="$tmpdir/rusty-v8-$system.sha256"
+
+  curl -fsSL "$release_url/$checksums_name" > "$checksums_file"
+  if ! awk -v archive="$archive_name" -v binding="$binding_name" '
+    NF == 0 { next }
+    NF != 2 { invalid = 1; next }
+    $2 == archive { archives++ ; next }
+    $2 == binding { bindings++ ; next }
+    { invalid = 1 }
+    END { exit !(invalid == 0 && archives == 1 && bindings == 1) }
+  ' "$checksums_file"; then
+    echo "invalid Codex rusty_v8 checksum manifest: $checksums_name" >&2
+    exit 1
+  fi
+
+  archive_sha="$(awk -v name="$archive_name" '$2 == name { print $1 }' "$checksums_file")"
+  binding_sha="$(awk -v name="$binding_name" '$2 == name { print $1 }' "$checksums_file")"
+  if ! [[ "$archive_sha" =~ ^[0-9a-f]{64}$ && "$binding_sha" =~ ^[0-9a-f]{64}$ ]]; then
+    echo "invalid Codex rusty_v8 checksums for $triple" >&2
+    exit 1
+  fi
+
+  archive_url="$release_url/$archive_name"
+  binding_url="$release_url/$binding_name"
+  archive_hash="$(nix hash convert --hash-algo sha256 --to sri "$archive_sha")"
+  binding_hash="$(nix hash convert --hash-algo sha256 --to sri "$binding_sha")"
   next_json="$tmpdir/rusty-v8-$system.json"
 
   jq \
     --arg system "$system" \
-    --arg url "$url" \
-    --arg hash "$hash" \
-    '. + {($system): {url: $url, hash: $hash}}' \
+    --arg archiveUrl "$archive_url" \
+    --arg archiveHash "$archive_hash" \
+    --arg bindingUrl "$binding_url" \
+    --arg bindingHash "$binding_hash" \
+    '. + {
+      ($system): {
+        archive: {url: $archiveUrl, hash: $archiveHash},
+        binding: {url: $bindingUrl, hash: $bindingHash}
+      }
+    }' \
     "$rusty_v8_json" > "$next_json"
   mv "$next_json" "$rusty_v8_json"
 }
@@ -124,6 +191,7 @@ jq -n \
   --arg rev "$rev" \
   --arg sourceHash "$source_hash" \
   --arg v8Version "$v8_version" \
+  --arg v8Profile "$v8_profile" \
   --slurpfile rustyV8Platforms "$rusty_v8_json" \
   --arg cargoHash "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" \
   '{
@@ -136,6 +204,7 @@ jq -n \
     },
     rustyV8: {
       version: $v8Version,
+      profile: $v8Profile,
       platforms: $rustyV8Platforms[0]
     },
     cargoHash: $cargoHash
@@ -184,6 +253,6 @@ mv "$versions_json" versions.json
 
 echo "Updated Codex to $version ($tag_name)"
 echo "Pinned source rev $rev"
-echo "Pinned rusty_v8 $v8_version"
+echo "Pinned rusty_v8 $v8_version ($v8_profile)"
 echo "Pinned Cargo hash $cargo_hash"
 echo "Pinned nixpkgs to $nixpkgs_url"

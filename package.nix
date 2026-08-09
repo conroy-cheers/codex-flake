@@ -23,9 +23,9 @@ let
     "--bin"
     "codex-code-mode-host"
   ];
-  rustyV8 =
+  rustyV8Artifacts =
     release.rustyV8.platforms.${system}
-      or (throw "rusty_v8 archive is not packaged for ${system}");
+      or (throw "rusty_v8 artifacts are not packaged for ${system}");
 in
 rustPlatform.buildRustPackage {
   pname = "codex";
@@ -50,7 +50,10 @@ rustPlatform.buildRustPackage {
   env = {
     CODEX_BUILD_COMMIT = release.rev or release.tagName;
     RUSTY_V8_ARCHIVE = fetchurl {
-      inherit (rustyV8) url hash;
+      inherit (rustyV8Artifacts.archive) url hash;
+    };
+    RUSTY_V8_SRC_BINDING_PATH = fetchurl {
+      inherit (rustyV8Artifacts.binding) url hash;
     };
   };
 
@@ -70,7 +73,8 @@ rustPlatform.buildRustPackage {
 
   passthru = {
     inherit (release) tagName publishedAt;
-    rustyV8Archive = rustyV8;
+    rustyV8Archive = rustyV8Artifacts.archive;
+    rustyV8Binding = rustyV8Artifacts.binding;
   };
 
   meta = {
