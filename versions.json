@@ -30,16 +30,6 @@
           "hash": "sha256-dyeCauR5vbZF6Acjn7EtH44uI956bPFvXuWSaQ0dhQY="
         }
       },
-      "x86_64-darwin": {
-        "archive": {
-          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/librusty_v8_ptrcomp_sandbox_release_x86_64-apple-darwin.a.gz",
-          "hash": "sha256-4Nm7ZOizoDTCkwyDly8/NXYCERSDQvoEB7OCUO8zCFY="
-        },
-        "binding": {
-          "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/src_binding_ptrcomp_sandbox_release_x86_64-apple-darwin.rs",
-          "hash": "sha256-ylrfDPicmnCtRgrnNkiy/om3SqETs8t/dXtqArdYOU8="
-        }
-      },
       "aarch64-darwin": {
         "archive": {
           "url": "https://github.com/openai/codex/releases/download/rusty-v8-v150.4.0/librusty_v8_ptrcomp_sandbox_release_aarch64-apple-darwin.a.gz",

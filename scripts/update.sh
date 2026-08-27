@@ -181,7 +181,6 @@ add_rusty_v8_platform() {
 
 add_rusty_v8_platform "x86_64-linux" "x86_64-unknown-linux-gnu"
 add_rusty_v8_platform "aarch64-linux" "aarch64-unknown-linux-gnu"
-add_rusty_v8_platform "x86_64-darwin" "x86_64-apple-darwin"
 add_rusty_v8_platform "aarch64-darwin" "aarch64-apple-darwin"
 
 jq -n \
