@@ -1,10 +1,10 @@
 {
-  "version": "0.153.2",
-  "tagName": "rust-v0.153.2",
-  "publishedAt": "2026-09-03T23:53:12Z",
-  "rev": "657a993cbee87acf52d14b758ce49dbd46d1b8eb",
+  "version": "0.153.3",
+  "tagName": "rust-v0.153.3",
+  "publishedAt": "2026-09-04T19:01:32Z",
+  "rev": "b1a547b1f73ce86205d9222ac19cff334b3b7a2e",
   "source": {
-    "hash": "sha256-R97lEHS2XfMQNbAc9k8v7EbcQCnwxND7zhnK3EBsI3Y="
+    "hash": "sha256-JujjJx9GHcTgirqEFr9tc4Ghzx65YNOqpNCc7rtthfI="
   },
   "rustyV8": {
     "version": "150.4.0",
