@@ -42,6 +42,12 @@ rustPlatform.buildRustPackage {
     sourceRoot="$sourceRoot/codex-rs"
   '';
 
+  postPatch = ''
+    if ! grep -q '^#!\[recursion_limit = "256"\]$' chatgpt/src/lib.rs; then
+      sed -i '1i #![recursion_limit = "256"]' chatgpt/src/lib.rs
+    fi
+  '';
+
   cargoHash = release.cargoHash;
   inherit cargoBuildFlags;
   cargoInstallFlags = cargoBuildFlags;
