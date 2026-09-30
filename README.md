@@ -37,3 +37,7 @@ release profile to disable LTO and debug information. These overrides apply
 only to the workflow build; normal flake builds retain the upstream release
 profile. CI evaluates the normal checks but runs the version check against
 the overridden binary.
+
+Hydra builds the explicit `hydraJobs.<system>.codex` jobs for each supported
+platform. These point directly to the normal Codex packages; the version checks
+remain available through `nix flake check`.

@@ -33,6 +33,10 @@
         }
       );
 
+      hydraJobs = forAllSystems (system: {
+        codex = self.packages.${system}.codex;
+      });
+
       apps = forAllSystems (
         system:
         let
