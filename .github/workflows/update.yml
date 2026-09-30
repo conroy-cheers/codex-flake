@@ -27,6 +27,8 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+            max-jobs = 1
+            cores = 1
 
       - name: Update package inputs
         run: nix develop --command ./scripts/update.sh
@@ -40,9 +42,54 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Add build swap
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          sudo fallocate -l 8G /codex-build.swap
+          sudo chmod 600 /codex-build.swap
+          sudo mkswap /codex-build.swap
+          sudo swapon /codex-build.swap
+          free -h
+          df -h /
+
       - name: Validate update
         if: steps.changes.outputs.changed == 'true'
-        run: nix flake check --print-build-logs
+        run: |
+          (
+            while sleep 30; do
+              free -h
+            done
+          ) &
+          monitor_pid=$!
+          trap 'kill "$monitor_pid" 2>/dev/null || true' EXIT
+
+          nix flake check --no-build --print-build-logs
+
+          # Keep the memory-saving release overrides local to CI. Evaluate the
+          # normal checks above, then build and check the overridden binary.
+          # shellcheck disable=SC2016 # The interpolation below belongs to Nix.
+          build_json="$(nix build --impure --no-link --json --print-build-logs --expr '
+            let
+              flake = builtins.getFlake (toString ./.);
+              codex = flake.packages.${builtins.currentSystem}.codex;
+            in
+              codex.overrideAttrs (old: {
+                env = old.env // {
+                  CARGO_PROFILE_RELEASE_LTO = "off";
+                  CARGO_PROFILE_RELEASE_DEBUG = "0";
+                };
+              })
+          ')"
+          package_path="$(jq -r '.[0].outputs.out' <<< "$build_json")"
+          expected_version="$(jq -r '.version' versions.json)"
+          version="$("$package_path/bin/codex" --version)"
+          case "$version" in
+            *"$expected_version"*) echo "Validated $version" ;;
+            *)
+              echo "expected codex version $expected_version, got: $version" >&2
+              exit 1
+              ;;
+          esac
 
       - name: Commit update
         if: steps.changes.outputs.changed == 'true'

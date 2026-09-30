@@ -28,5 +28,12 @@ the source and Cargo hashes, and refreshes the direct `nixpkgs` pin to match
 
 The GitHub Actions workflow in `.github/workflows/update.yml` runs every 10
 minutes and on manual dispatch. It runs the updater, validates changed inputs
-with `nix flake check`, and commits only when the generated package inputs
-changed.
+with `nix flake check --no-build`, builds and checks the installed Codex version,
+and commits only when the generated package inputs changed.
+
+The workflow limits Nix to one build at a time and one Cargo job, adds 8 GiB of
+swap, and logs memory usage during validation. Its source build overrides the
+release profile to disable LTO and debug information. These overrides apply
+only to the workflow build; normal flake builds retain the upstream release
+profile. CI evaluates the normal checks but runs the version check against
+the overridden binary.
