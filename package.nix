@@ -6,6 +6,8 @@
   libcap,
   openssl,
   pkg-config,
+  python3,
+  ripgrep,
   rustPlatform,
   stdenv,
 }:
@@ -13,16 +15,27 @@
 let
   release = builtins.fromJSON (builtins.readFile ./versions.json);
   system = stdenv.hostPlatform.system;
-  cargoBuildFlags = [
-    "-p"
-    "codex-cli"
-    "-p"
-    "codex-code-mode-host"
-    "--bin"
-    "codex"
-    "--bin"
-    "codex-code-mode-host"
-  ];
+  cargoBuildFlags =
+    [
+      "-p"
+      "codex-cli"
+      "-p"
+      "codex-code-mode-host"
+      "-p"
+      "codex-exec-server-cli"
+      "--bin"
+      "codex"
+      "--bin"
+      "codex-code-mode-host"
+      "--bin"
+      "codex-exec-server"
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isLinux [
+      "-p"
+      "codex-bwrap"
+      "--bin"
+      "bwrap"
+    ];
   rustyV8Artifacts =
     release.rustyV8.platforms.${system}
       or (throw "rusty_v8 artifacts are not packaged for ${system}");
@@ -52,6 +65,25 @@ rustPlatform.buildRustPackage {
   inherit cargoBuildFlags;
   cargoInstallFlags = cargoBuildFlags;
   cargoTestFlags = cargoBuildFlags;
+
+  postInstall = ''
+    # The daemon discovers the release layout relative to the real executable.
+    binaries="$(mktemp -d)"
+    mv "$out/bin" "$binaries/bin"
+    packageArgs=(
+      --target ${stdenv.hostPlatform.rust.rustcTarget}
+      --package-version "$version"
+      --package-dir "$out"
+      --entrypoint-bin "$binaries/bin/codex"
+      --code-mode-host-bin "$binaries/bin/codex-code-mode-host"
+      --exec-server-bin "$binaries/bin/codex-exec-server"
+      ${lib.optionalString stdenv.hostPlatform.isLinux ''--bwrap-bin "$binaries/bin/bwrap"''}
+      --rg-bin ${lib.getExe ripgrep}
+      --strip none
+    )
+    CODEX_REPO_ROOT="$(dirname "$PWD")" \
+      ${lib.getExe python3} ../scripts/build_codex_package.py "''${packageArgs[@]}"
+  '';
 
   env = {
     CODEX_BUILD_COMMIT = release.rev or release.tagName;
